@@ -1,0 +1,6 @@
+test:
+	cargo ntest run -- 
+p1:
+  cargo run --bin part-1
+p2:
+  cargo run --bin part-2
