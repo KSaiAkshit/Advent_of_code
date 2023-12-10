@@ -84,7 +84,7 @@ pub fn process(input: &str) -> miette::Result<String, AocError> {
             )
             .map(|pos| pos + num.extra)
             .collect::<Vec<IVec2>>();
-            dbg!(&surrounding_positions);
+            // dbg!(&surrounding_positions);
 
             surrounding_positions
                 .iter()

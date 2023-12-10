@@ -7,17 +7,17 @@ edition = "2021"
 
 [dependencies]
 itertools.workspace = true
-glam = { workspace = true }
-nom = { workspace = true }
-tracing = { workspace = true }
-tracing-subscriber = { workspace = true }
-miette = { workspace = true }
-thiserror = { workspace = true }
-dhat = { workspace = true }
-nom_locate = "4.2.0"
+glam.workspace = true
+nom.workspace = true
+tracing.workspace = true
+tracing-subscriber.workspace = true
+miette.workspace = true
+thiserror.workspace = true
+dhat.workspace = true
+nom_locate.workspace = true
 
 [dev-dependencies]
-divan = { workspace = true }
+divan.workspace = true
 
 [[bench]]
 name = "day-03"
