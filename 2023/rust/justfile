@@ -1,6 +1,6 @@
 alias w:= work
 work day part:
-    cargo watch -w day-{{ day }} -x "check -p day-{{ day }}" -s "just test {{ day }} {{ part }} " -s "just lint {{ day }}"
+    cargo watch -c -w day-{{ day }} -x "check -p day-{{ day }}" -s "just test {{ day }} {{ part }} " -s "just lint {{ day }}"
 
 trace day part:
     RUST_LOG=info cargo watch -w day-{{ day }} -x "check -p day-{{ day }}" -s "just test day-{{ day }} part{{ part }} " -s "just lint day-{{ day }}"
