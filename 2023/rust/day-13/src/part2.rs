@@ -9,35 +9,28 @@ pub enum Fold {
 }
 
 #[tracing::instrument]
-pub fn process(
-    input: &str,
-) -> miette::Result<String, AocError> {
-    let (horizontal, vertical) =
-        input.split("\n\n").flat_map(detect_fold).fold(
-            (0usize, 0usize),
-            |mut acc, item| match item {
-                Fold::Horizontal(num) => {
-                    acc.0 += 100 * num;
-                    acc
-                }
-                Fold::Vertical(num) => {
-                    acc.1 += num;
-                    acc
-                }
-            },
-        );
+pub fn process(input: &str) -> miette::Result<String, AocError> {
+    let (horizontal, vertical) = input.split("\n\n").flat_map(detect_fold).fold(
+        (0usize, 0usize),
+        |mut acc, item| match item {
+            Fold::Horizontal(num) => {
+                acc.0 += 100 * num;
+                acc
+            }
+            Fold::Vertical(num) => {
+                acc.1 += num;
+                acc
+            }
+        },
+    );
     Ok((horizontal + vertical).to_string())
 }
 
 pub fn detect_fold(input: &str) -> Option<Fold> {
-    detect_horizontal_fold(input)
-        .or(detect_vertical_fold(input))
+    detect_horizontal_fold(input).or(detect_vertical_fold(input))
 }
 pub fn detect_vertical_fold(input: &str) -> Option<Fold> {
-    let mut columns_iter_collection = input
-        .lines()
-        .map(|line| line.chars())
-        .collect::<Vec<_>>();
+    let mut columns_iter_collection = input.lines().map(|line| line.chars()).collect::<Vec<_>>();
     let columns = std::iter::from_fn(move || {
         let mut items = vec![];
         for iter in &mut columns_iter_collection {
@@ -66,8 +59,7 @@ pub fn detect_vertical_fold(input: &str) -> Option<Fold> {
                     <= 1
         })
         .find_map(|((index_a, _), (index_b, _))| {
-            let lines_a =
-                columns[0..=index_a].iter().rev();
+            let lines_a = columns[0..=index_a].iter().rev();
             let lines_b = columns[index_b..].iter();
 
             (lines_a
@@ -99,13 +91,8 @@ pub fn detect_horizontal_fold(input: &str) -> Option<Fold> {
                     <= 1
         })
         .find_map(|((index_a, _), (index_b, _))| {
-            let lines_a = lines[0..=index_a]
-                .iter()
-                .map(|line| line.chars())
-                .rev();
-            let lines_b = lines[index_b..]
-                .iter()
-                .map(|line| line.chars());
+            let lines_a = lines[0..=index_a].iter().map(|line| line.chars()).rev();
+            let lines_b = lines[index_b..].iter().map(|line| line.chars());
 
             (lines_a
                 .flatten()
@@ -148,10 +135,7 @@ mod tests {
 #....#..#",
         Fold::Horizontal(1)
     )]
-    fn test_vert_horizontal(
-        #[case] input: &str,
-        #[case] expected: Fold,
-    ) -> miette::Result<()> {
+    fn test_vert_horizontal(#[case] input: &str, #[case] expected: Fold) -> miette::Result<()> {
         assert_eq!(expected, detect_fold(input).unwrap());
         Ok(())
     }
