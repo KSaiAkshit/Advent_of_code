@@ -28,11 +28,6 @@ name = "day-13-bench"
 path = "benches/benchmarks.rs"
 harness = false
 
-[[bench]]
-name = "day-13-bench-criterion"
-path = "benches/benchmarks-criterion.rs"
-harness = false
-
 [features]
 dhat-heap = []
 

@@ -31,7 +31,6 @@ pub fn process(input: &str) -> miette::Result<String, AocError> {
         })
         .collect();
 
-    dbg!(&digit_result.iter().sum::<u32>());
     let sum = digit_result.iter().sum::<u32>();
     Ok(sum.to_string())
 }
