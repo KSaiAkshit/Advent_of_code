@@ -7,7 +7,7 @@ use nom::{
 };
 use nom_locate::{position, LocatedSpan};
 use pathfinding::prelude::dijkstra;
-use std::collections::{HashMap, HashSet, VecDeque};
+use std::collections::{HashMap, VecDeque};
 
 type Span<'a> = LocatedSpan<&'a str>;
 

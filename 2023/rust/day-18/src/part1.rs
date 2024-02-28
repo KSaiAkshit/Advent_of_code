@@ -1,4 +1,4 @@
-use std::{fmt::Write as _, fs::File, io::Write as _, ops::RangeInclusive};
+
 
 use crate::custom_error::AocError;
 use glam::IVec2;
@@ -11,7 +11,7 @@ use nom::{
     sequence::delimited,
     IResult, Parser,
 };
-use tracing::{info, span, Level};
+use tracing::{span, Level};
 
 #[derive(Debug, Clone, Copy)]
 struct DigInstructions<'a> {

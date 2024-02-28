@@ -1,7 +1,7 @@
 use crate::custom_error::AocError;
 use glam::IVec2;
 use itertools::Itertools;
-use tracing::{info, span, Level};
+use tracing::{span, Level};
 
 #[tracing::instrument]
 pub fn process(input: &str) -> miette::Result<String, AocError> {
@@ -90,8 +90,8 @@ pub fn process(input: &str) -> miette::Result<String, AocError> {
                 };
 
                 let v = (galaxy_a_expanded - galaxy_b_expanded).abs();
-                let distance = (v.x + v.y).abs();
-                distance
+                
+                (v.x + v.y).abs()
             })
         })
         .sum::<i32>();

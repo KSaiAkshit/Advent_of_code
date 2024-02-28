@@ -1,6 +1,6 @@
 use glam::I64Vec2;
 use itertools::Itertools;
-use tracing::{info, span, Level};
+use tracing::{span, Level};
 
 use crate::custom_error::AocError;
 
@@ -99,8 +99,8 @@ pub fn process(input: &str, expansion_size: i64) -> miette::Result<String, AocEr
                 };
 
                 let v = (galaxy_a_expanded - galaxy_b_expanded).abs();
-                let distance = (v.x + v.y).abs();
-                distance
+                
+                (v.x + v.y).abs()
             })
         })
         .sum::<i64>();

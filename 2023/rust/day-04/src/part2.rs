@@ -59,7 +59,7 @@ fn cards(input: &str) -> IResult<&str, Vec<Card>> {
 
 #[tracing::instrument]
 pub fn process(input: &str) -> miette::Result<String, AocError> {
-    let (_, card_data) = cards(&input).expect("a valid parse");
+    let (_, card_data) = cards(input).expect("a valid parse");
     let data = card_data
         .iter()
         .map(|card| card.num_matches())
@@ -74,7 +74,7 @@ pub fn process(input: &str) -> miette::Result<String, AocError> {
         .fold(store, |mut acc, (index, card_score)| {
             let to_add = *acc.get(&index).unwrap();
 
-            for i in (index + 1)..(index + 1 + *card_score as usize) {
+            for i in (index + 1)..(index + 1 + *card_score) {
                 acc.entry(i).and_modify(|value| {
                     *value += to_add;
                 });

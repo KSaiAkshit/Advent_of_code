@@ -55,7 +55,7 @@ pub fn process(input: &str) -> miette::Result<String, AocError> {
     let hands = input
         .lines()
         .map(|line| {
-            let (hand, bid) = line.split_once(" ").unwrap();
+            let (hand, bid) = line.split_once(' ').unwrap();
             (hand, bid.parse::<u32>().unwrap(), score_hand(hand))
         })
         .sorted_by_key(|x| (x.2 .0 as u8, x.2 .1))

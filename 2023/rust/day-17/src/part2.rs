@@ -8,7 +8,7 @@ use nom::{
 };
 use nom_locate::{position, LocatedSpan};
 use pathfinding::prelude::dijkstra;
-use std::collections::{HashMap, HashSet, VecDeque};
+use std::collections::{HashMap, VecDeque};
 
 type Span<'a> = LocatedSpan<&'a str>;
 
@@ -38,7 +38,7 @@ pub fn process(input: &str) -> miette::Result<String, AocError> {
         &(IVec2::splat(0), VecDeque::from([IVec2::splat(0)])),
         |(position, deque)| {
             let diffs: Vec<IVec2> = deque.iter().tuple_windows().map(|(a, b)| *a - *b).collect();
-            let last_diff = diffs.get(0);
+            let last_diff = diffs.first();
 
             let maybe_first_diff_count = diffs.iter().dedup_with_count().next();
             let options = if let Some(diff_count) = maybe_first_diff_count {

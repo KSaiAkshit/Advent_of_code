@@ -6,7 +6,7 @@ use nom::{
     sequence::separated_pair,
     IResult,
 };
-use tracing::info;
+
 
 use crate::custom_error::AocError;
 
@@ -93,9 +93,9 @@ impl<'a> Puzzle<'a> {
 #[tracing::instrument(skip(input))]
 fn process_line(input: &str) -> usize {
     let (_input, puzzle) = parse_line(input).expect("should parse a valid line");
-    let possible_solution_count = puzzle.possible_solution_count();
+    
 
-    possible_solution_count
+    puzzle.possible_solution_count()
 }
 
 #[cfg(test)]

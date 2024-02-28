@@ -1,6 +1,6 @@
 use crate::custom_error::AocError;
 use glam::IVec2;
-use itertools::{chain, Itertools};
+use itertools::{Itertools};
 #[allow(unused_imports)]
 use nom::{
     branch::alt,
@@ -61,7 +61,7 @@ pub fn process(input: &str) -> miette::Result<String, AocError> {
         })
         .collect::<HashSet<IVec2>>();
 
-    let result = objects
+    let _result = objects
         .iter()
         .filter_map(|value| {
             let Value::Number(num) = value else {
