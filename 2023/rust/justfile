@@ -1,15 +1,15 @@
 alias w:= work
 work day part:
-    cargo watch -c -w day-{{ day }} -x "check -p day-{{ day }}" -s "just test {{ day }} {{ part }} " -s "just lint {{ day }}"
+    cargo watch -c -w day-{{ day }} -x "check -p day-{{ day }}" -s "just test {{ day }} {{ part }} "
 
 trace day part:
     RUST_LOG=info cargo watch -w day-{{ day }} -x "check -p day-{{ day }}" -s "just test day-{{ day }} part{{ part }} " -s "just lint day-{{ day }}"
 
 lint day:
-    cargo clippy -p day-{{ day }}
+    cargo clippy -p day-{{ day }} --color always 2>&1 | less -R
 
 test day part:
-    cargo nextest run -p day-{{ day }} part{{ part }}
+    cargo nextest run -p day-{{ day }} part{{ part }} --color always 2>&1 | less -R
 
 bench-all:
     cargo bench -q > benchmarks.txt
