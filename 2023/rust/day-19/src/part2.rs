@@ -174,7 +174,7 @@ fn target(input: &str) -> IResult<&str, Target> {
     alt((
         tag("A").map(|_| Target::Accepted),
         tag("R").map(|_| Target::Rejected),
-        alpha1.map(|workflow_id| Target::Workflow(workflow_id)),
+        alpha1.map(Target::Workflow),
     ))(input)
 }
 fn rule_test(input: &str) -> IResult<&str, Rule> {

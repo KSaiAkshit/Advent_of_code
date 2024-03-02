@@ -66,11 +66,9 @@ impl<'a> Machine<'a> {
             MachineType::Conjunction { memory } => {
                 *memory.get_mut(sending_machine_id.as_str()).unwrap() = *signal;
 
-                let new_signal = memory
+                let new_signal = if memory
                     .values()
-                    .all(|s| s == &Signal::High)
-                    .then_some(Signal::Low)
-                    .unwrap_or(Signal::High);
+                    .all(|s| s == &Signal::High) { Signal::Low } else { Signal::High };
                 self.output
                     .iter()
                     .map(|id| (self.id.to_string(), id.to_string(), new_signal))
@@ -135,7 +133,7 @@ fn parse(input: &str) -> IResult<&str, HashMap<&str, Machine>> {
 
 #[tracing::instrument]
 pub fn process(input: &str) -> miette::Result<String, AocError> {
-    let (input, mut machines) = parse(input).expect("should parse");
+    let (_input, mut machines) = parse(input).expect("should parse");
     {
         let (a, b) = machines.iter().fold(
             (vec![], vec![]),
@@ -149,7 +147,7 @@ pub fn process(input: &str) -> miette::Result<String, AocError> {
         for i in a.iter() {
             t.insert(i);
         }
-        let mut t2 = HashSet::<&str>::new();
+        let _t2 = HashSet::<&str>::new();
         for i in b.iter() {
             t.insert(i);
         }

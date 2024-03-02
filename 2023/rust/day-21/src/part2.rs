@@ -84,11 +84,11 @@ pub fn process(input: &str, step_count: usize) -> miette::Result<String, AocErro
         Some(new_set)
     })
     .enumerate()
-    .inspect(|(i, set)| {
-        if ((i + 131 - 65) % 131) == 0 {
-            // this produces the sequence numbers used below
-            println!("{:03}: {}", i, set.len());
-        }
+    .map(|(_i, _set)| {
+        // if ((i + 131 - 65) % 131) == 0 {
+        //     // this produces the sequence numbers used below
+        //     println!("{:03}: {}", i, set.len());
+        // }
 
         // sequence numbers
         let seq0: i64 = 3884;
@@ -125,13 +125,13 @@ pub fn process(input: &str, step_count: usize) -> miette::Result<String, AocErro
         let c = c as i64;
 
         // dbg!(a, b, c);
-        // dbg!(a * n.pow(2) + b * n + c);
+        a * n.pow(2) + b * n + c
     })
     .nth(step_count)
-    .unwrap()
-    .1;
+    .unwrap();
+    dbg!(last_set);
 
-    Ok(last_set.len().to_string())
+    Ok(last_set.to_string())
 }
 
 #[allow(dead_code)]
