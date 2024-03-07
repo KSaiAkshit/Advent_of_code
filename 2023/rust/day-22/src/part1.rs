@@ -1,13 +1,11 @@
-use std::collections::{HashMap, HashSet};
+use std::collections::{HashMap};
 
 use glam::{IVec2, IVec3, Vec3Swizzles};
 use itertools::Itertools;
 use nom::{
-    branch::alt,
-    character::complete::{self, char, i32, line_ending},
-    combinator::opt,
-    multi::{fold_many1, separated_list1},
-    sequence::{separated_pair, terminated},
+    character::complete::{self, line_ending},
+    multi::{separated_list1},
+    sequence::{separated_pair},
     IResult, Parser,
 };
 
@@ -66,7 +64,7 @@ pub fn process(input: &str) -> miette::Result<String, AocError> {
                 .max()
                 .unwrap_or(0);
             let landing_z = max_z_underneath + 1;
-            let brick_z = min_cubes.iter().next().unwrap().z;
+            let brick_z = min_cubes.first().unwrap().z;
             let diff = brick_z - landing_z;
             let new_cubes = brick
                 .cubes
@@ -98,7 +96,7 @@ pub fn process(input: &str) -> miette::Result<String, AocError> {
         .iter()
         .filter(|brick| {
             let max_cubes = brick.cubes.iter().max_set_by_key(|cube| cube.z);
-            let our_id = cube_to_id_map[&max_cubes[0]];
+            let _our_id = cube_to_id_map[&max_cubes[0]];
             let max_z = max_cubes[0].z;
             // vec of ids
             let bricks_we_support: Vec<usize> = max_cubes
@@ -120,7 +118,7 @@ pub fn process(input: &str) -> miette::Result<String, AocError> {
             bricks_we_support
                 .iter()
                 .filter(|brick_id| {
-                    let cubes = id_to_cube_map.get(&brick_id).unwrap();
+                    let cubes = id_to_cube_map.get(brick_id).unwrap();
                     let min_cubes = cubes.iter().min_set_by_key(|cube| cube.z);
                     // let min_cubes_xy: Vec<IVec2> =
                     //     min_cubes

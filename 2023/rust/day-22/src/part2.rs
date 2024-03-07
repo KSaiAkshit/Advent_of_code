@@ -1,4 +1,4 @@
-use std::collections::{HashMap, HashSet};
+use std::collections::{HashSet};
 
 use crate::custom_error::AocError;
 use glam::{IVec2, IVec3, Vec3Swizzles};
@@ -61,7 +61,7 @@ pub fn process(input: &str) -> miette::Result<String, AocError> {
                 .iter()
                 .filter(|b| b != &brick)
                 .collect::<Vec<&Brick>>();
-            let (_, fall_count) = fall(&new_bricks);
+            let (_, fall_count) = fall(new_bricks);
             fall_count
         })
         .sum::<i32>();
@@ -70,7 +70,7 @@ pub fn process(input: &str) -> miette::Result<String, AocError> {
 }
 
 fn fall(sorted_bricks: &[&Brick]) -> (Vec<Brick>, i32) {
-    let (fallen_bricks, num_falling_bricks) = sorted_bricks.into_iter().fold(
+    let (fallen_bricks, num_falling_bricks) = sorted_bricks.iter().fold(
         (vec![], 0),
         |(mut acc, mut fall_count): (Vec<Brick>, i32), brick| {
             let min_cubes = brick.cubes.iter().min_set_by_key(|cube| cube.z);
@@ -83,7 +83,7 @@ fn fall(sorted_bricks: &[&Brick]) -> (Vec<Brick>, i32) {
                 .max()
                 .unwrap_or(0);
             let landing_z = max_z_underneath + 1;
-            let brick_z = min_cubes.iter().next().unwrap().z;
+            let brick_z = min_cubes.first().unwrap().z;
             let diff = brick_z - landing_z;
             if diff >= 1 {
                 fall_count += 1;
