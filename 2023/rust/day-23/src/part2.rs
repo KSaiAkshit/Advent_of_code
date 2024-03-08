@@ -1,4 +1,8 @@
-use std::{collections::HashMap, fmt::Display, io::Write};
+use std::{
+    collections::HashMap,
+    fmt::Display,
+    // io::Write
+};
 
 use crate::custom_error::AocError;
 
@@ -15,8 +19,8 @@ use nom_locate::LocatedSpan;
 
 use petgraph::{
     algo,
-    data::FromElements,
-    dot::{Config, Dot},
+    // data::FromElements,
+    // dot::{Config, Dot},
     prelude::*,
 };
 
