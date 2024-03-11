@@ -16,7 +16,7 @@ dhat.workspace = true
 nom-supreme.workspace = true
 glam.workspace = true
 nom_locate.workspace = true
-ndarray-linalg = "0.16.0"
+ndarray-linalg = {version = "0.16.0", features =["openblas-system"] }
 ndarray = "0.15.6"
 
 [dev-dependencies]

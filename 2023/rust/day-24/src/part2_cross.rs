@@ -1,6 +1,6 @@
 use crate::custom_error::AocError;
 
-use glam::{DVec2, I64Vec2, I64Vec3, Vec3Swizzles};
+use glam::{DVec2, DVec3, I64Vec2, I64Vec3, Vec3Swizzles};
 use itertools::Itertools;
 use ndarray::prelude::*;
 use ndarray_linalg::Solve;
@@ -48,11 +48,117 @@ fn parse_hails(input: &str) -> IResult<&str, Vec<Hail>> {
 // Hailstone B: 18, 19, 22 @ -1, -1, -2
 // Hailstones' paths will cross inside the test area (at x=14.333, y=15.333).
 
-fn solve_linalg(h1: Hail, h2: Hail) -> DVec2 {
-    let a = [(h1.direction.y), (h2.direction.y)]; // a = vy
-    let b = [(-h1.direction.x), (-h2.direction.x)]; // b = -vx
+// Rock - H1
+// (xr, yr, zr)   (xh, yh, zh)
+// (ur, vr, wr)   (uh, vh, wh)
+// for time t
+
+// t = (xr-xh)/(uh-ur) = (yr-yh)/(vh-vr) = (zr-zh)/(wh-wr)
+
+// (xr-xh)(vh-vr) - (uh-ur)(yr-yh) = 0
+// (yr-yh)(wh-wr) - (zr-zh)(vh-vr) = 0
+
+// need 6 equations -> 6 unknowns.
+// get other three equations from H1, H2, H3
+
+// P - Pi = t ( V - Vi)
+// Vector = Scalar * Vector -> Vectors are parallel, crossproduct is 0
+// (P - Pi) x (V - Vi) = 0
+// (Vi-Vj)×(Pi-Pj)⋅P = (Vi-Vj)⋅Pi×Pj
+// Pi = Coords of hail i
+
+/*
+(V0-V1)×(P0-P1)⋅P = (V0-V1)⋅P0×P1
+(V0-V2)×(P0-P2)⋅P = (V0-V2)⋅P0×P2
+(V1-V2)×(P1-P2)⋅P = (V1-V2)⋅P1×P2
+*/
+fn gen_equations(h1: Hail, h2: Hail, h3: Hail) -> DVec3 {
+    let hails = [h1, h2, h3];
+    let mut sPos: Vec<I64Vec3> = Vec::new();
+    let mut sVel: Vec<I64Vec3> = Vec::new();
+    hails.iter().for_each(|h| {
+        sPos.push(h.starting_position);
+        sVel.push(h.direction);
+    });
+    // dbg!(sPos, sVel);
+
+    let lhs: Vec<_> = hails
+        .iter()
+        .tuple_combinations()
+        // .inspect(|(x, y)| {
+        //     dbg!(x, y);
+        // })
+        .map(|(h1, h2)| {
+            let p1 = h1.starting_position;
+            let p2 = h2.starting_position;
+            let v1 = h1.direction;
+            let v2 = h2.direction;
+            let diff_p = p2 - p1;
+            let diff_v = v2 - v1;
+            // dbg!(diff_p);
+            // dbg!(diff_v);
+
+            (v2 - v1).cross(p2 - p1).as_dvec3().to_array()
+        })
+        // .inspect(|cross| {
+        //     dbg!(cross);
+        // })
+        .collect();
+    let rhs: Vec<_> = hails
+        .iter()
+        .circular_tuple_windows()
+        // .inspect(|(x, y)| {
+        //     dbg!(x, y);
+        // })
+        .map(|(h1, h2)| {
+            let p1 = h1.starting_position;
+            let p2 = h2.starting_position;
+            let v1 = h1.direction;
+            let v2 = h2.direction;
+
+            let diff_p = p2 - p1;
+            let diff_v = v2 - v1;
+            // dbg!(diff_p);
+            // dbg!(diff_v);
+            (v2 - v1).dot(p2.cross(p1)) as f64
+        })
+        // .inspect(|dot| {
+        //     dbg!(dot);
+        // })
+        .collect();
+    // dbg!(lhs, rhs);
+
+    let coeff_matrix: Array2<f64> = Array2::from(lhs);
+    let const_matrix: Array1<f64> = Array1::from(rhs);
+    // dbg!(&coeff_matrix, &const_matrix);
+
+    let result = coeff_matrix
+        .solve(&const_matrix)
+        .unwrap_or(Array::default(3));
+    let xx = result[0];
+    let yy = result[1];
+    let zz = result[2];
+    DVec3::new(xx, yy, zz)
+
+    // dbg!(result);
+
+    // let p1 = h1.starting_position;
+    // let p2 = h2.starting_position;
+    // let p3 = h3.starting_position;
+    // let v1 = h1.direction;
+    // let v2 = h2.direction;
+    // let v3 = h3.direction;
+    // let p: DVec3 = DVec3::default();
+    // let v: DVec3 = DVec3::default();
+    // let cross = p1.cross(p2);
+    // // dbg!(cross);
+    // // dbg!(p1, p2, p3, v1, v2, v3, p, v);
+}
+
+fn solve_linalg(h1: Hail, h2: Hail, h3: Hail) -> DVec2 {
+    let a = [(h1.direction.y), (h2.direction.y)];
+    let b = [(-h1.direction.x), (-h2.direction.x)];
     let c = [
-        // c = vy*sx - vx*sj
         (h1.direction.y * h1.starting_position.x - h1.direction.x * h1.starting_position.y),
         (h2.direction.y * h2.starting_position.x - h2.direction.x * h2.starting_position.y),
     ];
@@ -80,8 +186,8 @@ fn solve_linalg(h1: Hail, h2: Hail) -> DVec2 {
     }
 }
 
-fn check_parallel(h1: Hail, h2: Hail) -> Option<DVec2> {
-    let intersection = solve_linalg(h1, h2);
+fn check_parallel(h1: Hail, h2: Hail, h3: Hail) -> Option<DVec2> {
+    let intersection = solve_linalg(h1, h2, h3);
 
     if (h1.direction.y * -h2.direction.x) != (h2.direction.y * -h1.direction.x) {
         Some(intersection)
@@ -103,9 +209,11 @@ pub fn process(input: &str) -> miette::Result<String, AocError> {
     let (_, hail) = parse_hails(input).expect("Should pass");
     let bounds = 200000000000000f64..=400000000000000f64;
 
-    // let h1 = hail[0];
-    // let h2 = hail[3];
+    let h1 = hail[0];
+    let h2 = hail[1];
+    let h3 = hail[2];
     // dbg!(h1, h2);
+    // gen_equations(h1, h2, h3);
 
     // let res = solve_linalg(h1, h2);
     // dbg!(res);
@@ -116,16 +224,18 @@ pub fn process(input: &str) -> miette::Result<String, AocError> {
         // .inspect(|x| {
         //     dbg!(x);
         // })
-        .filter_map(|(h1, h2)| check_parallel(*h1, *h2))
+        .map(|(h1, h2, h3)| gen_equations(*h1, *h2, *h3))
         // .filter(|res| res.x != 0.0 && res.y != 0.0)
-        .filter(|dvec| {
-            dvec.x != 0.0 && dvec.y != 0.0 && bounds.contains(&dvec.x) && bounds.contains(&dvec.y)
-        })
+        // .filter(|dvec| {
+        //     dvec.x != 0.0 && dvec.y != 0.0 && bounds.contains(&dvec.x) && bounds.contains(&dvec.y)
+        // })
         // .inspect(|res| {
         //     dbg!(res);
         // })
         .collect();
-    Ok(result.len().to_string())
+    dbg!(result);
+    // Ok(result.len().to_string())
+    Ok("result".to_string())
 }
 
 #[cfg(test)]
