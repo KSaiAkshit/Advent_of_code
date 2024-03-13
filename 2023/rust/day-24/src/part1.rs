@@ -1,6 +1,6 @@
 use crate::custom_error::AocError;
 
-use glam::{DVec2, I64Vec2, I64Vec3, Vec3Swizzles};
+use glam::{DVec2, I64Vec3};
 use itertools::Itertools;
 use ndarray::prelude::*;
 use ndarray_linalg::Solve;

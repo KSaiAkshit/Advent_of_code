@@ -1,6 +1,6 @@
 use crate::custom_error::AocError;
 
-use glam::{DVec2, DVec3, I64Vec2, I64Vec3, Vec3Swizzles};
+use glam::{DVec2, DVec3, I64Vec3};
 use itertools::Itertools;
 use ndarray::prelude::*;
 use ndarray_linalg::Solve;
@@ -93,8 +93,8 @@ fn gen_equations(h1: Hail, h2: Hail, h3: Hail) -> DVec3 {
             let p2 = h2.starting_position;
             let v1 = h1.direction;
             let v2 = h2.direction;
-            let diff_p = p2 - p1;
-            let diff_v = v2 - v1;
+            let _diff_p = p2 - p1;
+            let _diff_v = v2 - v1;
             // dbg!(diff_p);
             // dbg!(diff_v);
 
@@ -116,8 +116,8 @@ fn gen_equations(h1: Hail, h2: Hail, h3: Hail) -> DVec3 {
             let v1 = h1.direction;
             let v2 = h2.direction;
 
-            let diff_p = p2 - p1;
-            let diff_v = v2 - v1;
+            let _diff_p = p2 - p1;
+            let _diff_v = v2 - v1;
             // dbg!(diff_p);
             // dbg!(diff_v);
             (v2 - v1).dot(p2.cross(p1)) as f64
@@ -155,7 +155,7 @@ fn gen_equations(h1: Hail, h2: Hail, h3: Hail) -> DVec3 {
     // // dbg!(p1, p2, p3, v1, v2, v3, p, v);
 }
 
-fn solve_linalg(h1: Hail, h2: Hail, h3: Hail) -> DVec2 {
+fn solve_linalg(h1: Hail, h2: Hail, _h3: Hail) -> DVec2 {
     let a = [(h1.direction.y), (h2.direction.y)];
     let b = [(-h1.direction.x), (-h2.direction.x)];
     let c = [
@@ -207,11 +207,11 @@ fn check_parallel(h1: Hail, h2: Hail, h3: Hail) -> Option<DVec2> {
 #[tracing::instrument]
 pub fn process(input: &str) -> miette::Result<String, AocError> {
     let (_, hail) = parse_hails(input).expect("Should pass");
-    let bounds = 200000000000000f64..=400000000000000f64;
+    let _bounds = 200000000000000f64..=400000000000000f64;
 
-    let h1 = hail[0];
-    let h2 = hail[1];
-    let h3 = hail[2];
+    let _h1 = hail[0];
+    let _h2 = hail[1];
+    let _h3 = hail[2];
     // dbg!(h1, h2);
     // gen_equations(h1, h2, h3);
 

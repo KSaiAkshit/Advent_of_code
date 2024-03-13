@@ -80,7 +80,7 @@ pub fn process(input: &str) -> miette::Result<String, AocError> {
         .tuple_combinations()
         .filter_map(|(hail_one, hail_two)| {
             hail_one
-                .solve_intersection(&hail_two)
+                .solve_intersection(hail_two)
                 .ok()
                 .map(|intersection| ((hail_one, hail_two), intersection))
         })
@@ -122,8 +122,8 @@ fn hardcoded_solve_intersection() {
     ];
     let b: Array1<f64> = array![18. - 19., 19. - 13.];
     let x = a.solve_into(b).unwrap();
-    let xx = x[0];
-    let yy = x[1];
+    let _xx = x[0];
+    let _yy = x[1];
     // dbg!(x[0], x[1]);
     // solved eq 1
     // dbg!(19. - 2. * xx);
@@ -149,12 +149,10 @@ fn solve_intersection() {
     //     starting_position: DVec3::new(19., 13., 30.),
     //     direction: DVec3::new(-2., 1., -2.),
     // };
-    let v1 = vec![h1.direction.x, h1.direction.y, h1.direction.z];
-    let p1 = vec![
-        h1.starting_position.x,
+    let v1 = [h1.direction.x, h1.direction.y, h1.direction.z];
+    let p1 = [h1.starting_position.x,
         h1.starting_position.y,
-        h1.starting_position.z,
-    ];
+        h1.starting_position.z];
     let h2 = Hailf64 {
         starting_position: DVec3::new(258285813391475., 225317967801013., 306162724914014.),
         direction: DVec3::new(14., -10., -22.),
@@ -164,12 +162,10 @@ fn solve_intersection() {
     //     direction: DVec3::new(-1., -1., -2.),
     // };
 
-    let v2 = vec![h2.direction.x, h2.direction.y, h2.direction.z];
-    let p2 = vec![
-        h2.starting_position.x,
+    let v2 = [h2.direction.x, h2.direction.y, h2.direction.z];
+    let p2 = [h2.starting_position.x,
         h2.starting_position.y,
-        h2.starting_position.z,
-    ];
+        h2.starting_position.z];
     let h3 = Hailf64 {
         starting_position: DVec3::new(377519381672953., 343737262245611., 485395777725108.),
         direction: DVec3::new(-182., -80., -373.),
@@ -179,12 +175,10 @@ fn solve_intersection() {
     //     direction: DVec3::new(-1., -1., -2.),
     // };
 
-    let v3 = vec![h3.direction.x, h3.direction.y, h3.direction.z];
-    let p3 = vec![
-        h3.starting_position.x,
+    let v3 = [h3.direction.x, h3.direction.y, h3.direction.z];
+    let p3 = [h3.starting_position.x,
         h3.starting_position.y,
-        h3.starting_position.z,
-    ];
+        h3.starting_position.z];
 
     // 19 - 2 * a = 18 - a
     // 13 + b = 19 - b
