@@ -33,12 +33,12 @@ harness = false
 [features]
 dhat-heap = []
 
-[[bin]]
-name = "part1"
-path = "src/bin/part1.rs"
-doc = false
+# [[bin]]
+# name = "part1"
+# path = "src/bin/part1.rs"
+# doc = false
 
-[[bin]]
-name = "part2"
-path = "src/bin/part2.rs"
-doc = false
+# [[bin]]
+# name = "part2"
+# path = "src/bin/part2.rs"
+# doc = false
