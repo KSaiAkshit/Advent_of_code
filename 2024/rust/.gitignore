@@ -1,0 +1,3 @@
+target
+day-*.bench.txt
+.direnv/*
