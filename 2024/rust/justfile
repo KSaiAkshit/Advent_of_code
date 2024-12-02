@@ -7,28 +7,44 @@ _default:
 work day part:
     cargo watch -c -w day-{{ day }} -x "check -p day-{{ day }}" -s "just test {{ day }} {{ part }} "
 
+[no-cd]
+run part:
+    cargo run --bin part{{ part }}
+
+[doc("enable tracing with 'info' level")]
 trace day part:
     RUST_LOG=info cargo watch -w day-{{ day }} -x "check -p day-{{ day }}" -s "just test day-{{ day }} part{{ part }} " -s "just lint day-{{ day }}"
 
+[doc("run clippy on the day")]
 lint day:
     cargo clippy -p day-{{ day }} --color always 2>&1 | less -R
 
+[doc('run test for the day and the part')]
 test day part:
     cargo nextest run -p day-{{ day }} part{{ part }} --color always 2>&1 | less -R
 
+[doc("run benchmark for all days and save to benchmarks.txt")]
 bench-all:
     cargo bench -q > benchmarks.txt
 
+[doc("run benchmark for day and part and save to file")]
 bench day part:
     cargo bench --bench day-{{ day }}-bench part{{ part }} >> ./day-{{ day }}/day-{{ day }}.bench.txt
 
+[doc("run flamegraph for day and part and save to file")]
 flamegraph day part:
     cargo flamegraph --profile flamegraph --root --package day-{{ day }} --bin part{{ part }} -o flamegraphs/day-{{ day }}--part{{ part }}.svg
 
+[doc("run profiler for day and part")]
 dhat day part:
     cargo run --profile dhat --features dhat-heap --package day-{{ day }} --bin part{{ part }}
 
+[doc("populate day with template, problem statement and puzzle input")]
 create day:
     cargo generate --path ./daily-template --name day-{{ day }}
     aoc d --day {{ day }} -p day-{{ day }}/puzzle.md -i day-{{ day }}/input1.txt
     cp day-{{ day }}/input1.txt day-{{ day }}/input2.txt
+
+[doc("get latest puzzle info after finishing part 1")]
+refresh day:
+    aoc d --day {{ day }} -P -p day-{{ day }}/puzzle.md
